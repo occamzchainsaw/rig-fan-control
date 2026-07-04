@@ -2,4 +2,5 @@
   <Project Path="RigFanCmdTest/RigFanCmdTest.csproj" Id="154513e9-9d6b-4535-b08e-8c292bc4a815" />
   <Project Path="RigFanControl.Core/RigFanControl.Core.csproj" Id="a272d371-b830-4362-862a-91ceebbae638" />
   <Project Path="RigFanControl.Ipc/RigFanControl.Ipc.csproj" />
+  <Project Path="RigFanControl.Tray/RigFanControl.Tray.csproj" Id="1389b3ea-3756-4134-94c8-18c5305beeff" />
 </Solution>

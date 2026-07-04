@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RigFanControl.Ipc")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+718e94f1b882244b87972cf862c05152f1240c6d")]
 [assembly: System.Reflection.AssemblyProductAttribute("RigFanControl.Ipc")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RigFanControl.Ipc")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
