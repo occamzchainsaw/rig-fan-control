@@ -6,50 +6,50 @@
         xmlns:local="clr-namespace:RigFanControl.Tray"
         mc:Ignorable="d"
         d:Width="280" d:Height="160"
-        MinWidth="280" MinHeight="160"
+        Width="280" Height="160"
         WindowStyle="None"
         ResizeMode="NoResize"
         ShowInTaskbar="False"
-        Topmost="True"
-        AllowsTransparency="True"
-        Background="Transparent">
-    <Border CornerRadius="8"
-            Padding="16"
-            Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0"
-                  VerticalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0"
-                           Text="Fan speed"/>
-                <TextBlock Grid.Column="1"
-                           HorizontalAlignment="Right"
-                           Text="9999 RMP"/>
-            </Grid>
-            <Grid Grid.Row="1"
-                  VerticalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <Slider Grid.Column="0"
-                        Minimum="0" Maximum="100"
-                        Margin="0,0,12,0"
-                        TickFrequency="5"
-                        IsSnapToTickEnabled="True"
-                        ValueChanged="SetValueChanged"/>
-                <TextBox Grid.Column="1"
-                         HorizontalAlignment="Right"
-                         Width="32"
-                         PreviewTextInput="PreviewTextInputHandler"/>
-            </Grid>
+        Topmost="True">
+
+    <Window.Resources>
+        <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml" />
+    </Window.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0"
+              VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0"
+                       Text="Fan speed"/>
+            <TextBlock Grid.Column="1"
+                       HorizontalAlignment="Right"
+                       Text="9999 RMP"/>
         </Grid>
-    </Border>
+        <Grid Grid.Row="1"
+              VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Slider Grid.Column="0"
+                    Minimum="0" Maximum="100"
+                    HorizontalAlignment="Stretch"
+                    Margin="0,0,12,0"
+                    TickFrequency="5"
+                    IsSnapToTickEnabled="True"
+                    ValueChanged="SetValueChanged"/>
+            <TextBox Grid.Column="1"
+                     HorizontalAlignment="Right"
+                     Width="32"
+                     PreviewTextInput="PreviewTextInputHandler"/>
+        </Grid>
+    </Grid>
 </Window>

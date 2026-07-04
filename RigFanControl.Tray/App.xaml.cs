@@ -17,10 +17,6 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
-#pragma warning disable WPF0001
-        ThemeMode = ThemeMode.System;
-#pragma warning restore WPF0001
-
         AppDomain.CurrentDomain.ProcessExit += (_, _) => Cleanup();
         SystemEvents.SessionEnding += (_, _) => Cleanup();
 
@@ -43,6 +39,7 @@ public partial class App : Application
         };
         _tray.TrayLeftMouseDown += (_, _) => ToggleFlyout();
         _tray.ContextMenu = BuildContextMenu();
+        _tray.ForceCreate(enablesEfficiencyMode: false);
     }
 
     private ContextMenu BuildContextMenu()
