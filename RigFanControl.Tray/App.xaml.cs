@@ -4,33 +4,50 @@ using RigFanControl.Core;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace RigFanControl.Tray;
 
 public partial class App : Application
 {
+    private ServiceProvider _provider = null!;
     private TaskbarIcon? _tray;
     private FlyoutWindow? _flyout;
-    private FanController? _controller;
 
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
 
+        string appDataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RigFanControl");
+        string configPath = Path.Combine(appDataDir, "config.json");
+
+        var store = new JsonConfigStore(configPath);
+        if (!File.Exists(configPath))
+            store.SaveConfig(new FanControllerConfig());
+
+        var configuration = new ConfigurationBuilder()
+            .AddJsonFile(configPath, optional: false, reloadOnChange: true)
+            .Build();
+
+        var services = new ServiceCollection();
+
+        services.AddOptions<FanControllerConfig>()
+            .Bind(configuration)
+            .Validate(c => c.LastValue is >= 0 and <= 100);
+
+        services.AddSingleton<IConfigStore>(_ => new JsonConfigStore(configPath));
+        services.AddSingleton<FanController>();
+        services.AddSingleton<FlyoutWindow>();
+
+        _provider = services.BuildServiceProvider();
+
+        _flyout = _provider.GetRequiredService<FlyoutWindow>();
+
         AppDomain.CurrentDomain.ProcessExit += (_, _) => Cleanup();
         SystemEvents.SessionEnding += (_, _) => Cleanup();
 
-        // todo: change to actual config
-        FanControllerConfig config = new()
-        {
-            ControlIdentifier = "/lpc/nct6687d/0/control/4",
-            TachIdentifier = "/lpc/nct6687d/0/fan/4",
-            LastValue = 50.0f
-        };
-        _controller = new FanController(config);
-        _flyout = new FlyoutWindow(_controller);
-
-        //_tray = (TaskbarIcon)FindResource("TrayIcon");
         _tray = new()
         {
             IconSource = new BitmapImage(new Uri("pack://application:,,,/Assets/trayicon.ico")),
@@ -46,9 +63,12 @@ public partial class App : Application
     {
         var menu = new ContextMenu();
 
+        var openItem = new MenuItem { Header = "Open" };
+        openItem.Click += (_, _) => ToggleFlyout();
         var exitItem = new MenuItem { Header = "Exit" };
         exitItem.Click += (_, _) => { Cleanup(); Shutdown(); };
 
+        menu.Items.Add(openItem);
         menu.Items.Add(exitItem);
         return menu;
     }
@@ -63,8 +83,7 @@ public partial class App : Application
 
     private void Cleanup()
     {
-        _controller?.Dispose();
+        _provider?.Dispose();
         _tray?.Dispose();
     }
 }
-

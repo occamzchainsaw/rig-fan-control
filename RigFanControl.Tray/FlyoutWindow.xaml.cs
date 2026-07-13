@@ -7,8 +7,10 @@ namespace RigFanControl.Tray;
 
 public partial class FlyoutWindow : Window
 {
-    private static readonly Regex _regex = NumberRegex(); //regex that matches disallowed text
+    [GeneratedRegex("[^0-9.-]+")]
+    private static partial Regex NumberRegex();
     private readonly FanController _controller;
+    private readonly DebounceDispatcher _debounceTimer = new();
 
     public FlyoutWindow(FanController controller)
     {
@@ -38,14 +40,11 @@ public partial class FlyoutWindow : Window
 
     private void SetValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
-        _controller.SetFanSpeed((float)e.NewValue);
+        _debounceTimer.Debounce(500, () => { _controller.SetFanSpeed((float)e.NewValue); });
     }
 
     private static bool IsTextAllowed(string text)
     {
-        return !_regex.IsMatch(text);
+        return !NumberRegex().IsMatch(text);
     }
-
-    [GeneratedRegex("[^0-9.-]+")]
-    private static partial Regex NumberRegex();
 }

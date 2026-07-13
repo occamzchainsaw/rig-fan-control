@@ -1,4 +1,5 @@
 ﻿using LibreHardwareMonitor.Hardware;
+using Microsoft.Extensions.Options;
 
 namespace RigFanControl.Core;
 
@@ -8,16 +9,17 @@ public class FanController : IDisposable
     private IControl? _control = null;
     private ISensor? _tach = null;
 
-    public FanController() 
+    public FanController()
     {
         _computer = new() { IsMotherboardEnabled = true };
         _computer.Open();
     }
 
-    public FanController(FanControllerConfig config)
+    public FanController(IOptionsMonitor<FanControllerConfig> options)
     {
         _computer = new() { IsMotherboardEnabled = true };
         _computer.Open();
+        var config = options.CurrentValue;
         SetFromConfig(config);
     }
 
@@ -58,7 +60,7 @@ public class FanController : IDisposable
         if (_computer.Hardware.Count == 0)
             return;
         _computer.Hardware[0].Update();
-        
+
         if (_computer.Hardware[0].SubHardware.Length == 0)
             return;
 
