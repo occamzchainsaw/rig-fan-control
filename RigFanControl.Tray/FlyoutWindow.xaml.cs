@@ -32,7 +32,17 @@ public partial class FlyoutWindow : Window
     protected override void OnDeactivated(EventArgs e)
     {
         base.OnDeactivated(e);
+        if (_mainControl.DataContext is MainViewModel vm)
+            vm.IsActive = false;
         Hide();
+    }
+
+    protected override void OnContentRendered(EventArgs e)
+    {
+        base.OnContentRendered(e);
+
+        if (_mainControl.DataContext is MainViewModel vm)
+            vm.IsActive = true;
     }
 
     public void ShowNearTray()

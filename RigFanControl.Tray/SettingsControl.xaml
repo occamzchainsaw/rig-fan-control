@@ -5,31 +5,31 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:RigFanControl.Tray"
              mc:Ignorable="d"
-             d:Width="248" d:Height="360"
-             Width="248" Height="360">
+             d:Width="360" d:Height="360"
+             Width="360" Height="360">
 
     <UserControl.Resources>
         <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml" />
     </UserControl.Resources>
 
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid RowDefinitions="Auto,*,Auto,Auto">
         <TextBlock Grid.Row="0"
-                   Margin="0,0,0,8"
+                   Margin="0,0,0,12"
                    Style="{StaticResource SubtitleTextBlockStyle}"
                    Text="Select your fan header"/>
         <ListBox Grid.Row="1"
-                 Margin="0,0,0,8"
+                 Margin="0,0,0,12"
+                 Padding="0"
                  SelectionMode="Single"
-                 ItemsSource="{Binding ViewModel.FanCandidates, UpdateSourceTrigger=PropertyChanged}"
-                 SelectedItem="{Binding ViewModel.SelectedCandidate, UpdateSourceTrigger=PropertyChanged}">
+                 HorizontalContentAlignment="Stretch"
+                 ItemsSource="{Binding FanCandidates, UpdateSourceTrigger=PropertyChanged}"
+                 SelectedItem="{Binding SelectedCandidate, UpdateSourceTrigger=PropertyChanged}">
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
+                    <Grid ColumnDefinitions="*,Auto"
+                          VerticalAlignment="Center">
                         <TextBlock Grid.Column="0"
+                                   HorizontalAlignment="Left"
                                    Style="{StaticResource BodyTextBlockStyle}"
                                    Text="{Binding Path=Name}"/>
                         <TextBlock Grid.Column="1"
@@ -40,7 +40,11 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <StackPanel Grid.Row="2"
+        <CheckBox Grid.Row="2"
+                  Margin="0,0,0,12"
+                  Content="Start application with Windows"
+                  IsChecked="{Binding StartWithWindows, UpdateSourceTrigger=PropertyChanged}"/>
+        <StackPanel Grid.Row="3"
                     Orientation="Horizontal"
                     HorizontalAlignment="Right">
             <Button Margin="0,0,8,0"

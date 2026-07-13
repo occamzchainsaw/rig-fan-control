@@ -2,7 +2,7 @@
 
 namespace RigFanControl.Core;
 
-public record FanCandidate(string Name, Identifier Id);
+
 
 public static class HardwareDiscovery
 {
@@ -45,10 +45,13 @@ public static class HardwareDiscovery
 
         var searchString = controlId.ToString().Replace(@"control", @"fan");
 
-        return computer.Hardware[0].SubHardware[0].Sensors
+        var tachId = computer.Hardware[0].SubHardware[0].Sensors
             .Where(s => s.SensorType == SensorType.Fan)
             .Where(s => s.Identifier.ToString().Equals(searchString, StringComparison.OrdinalIgnoreCase))
             .Select(s => s.Identifier)
             .FirstOrDefault();
+
+        computer.Close();
+        return tachId;
     }
 }

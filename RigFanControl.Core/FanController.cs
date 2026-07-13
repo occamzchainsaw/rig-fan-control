@@ -1,7 +1,10 @@
 ﻿using LibreHardwareMonitor.Hardware;
 using Microsoft.Extensions.Options;
+using System.Collections;
 
 namespace RigFanControl.Core;
+
+public record FanCandidate(string Name, Identifier Id);
 
 public class FanController : IDisposable
 {
@@ -89,6 +92,45 @@ public class FanController : IDisposable
             return;
 
         _control.SetSoftware(value);
+    }
+
+    public List<FanCandidate> ListCandidates()
+    {
+        if (_computer.Hardware.Count == 0)
+            return [];
+        if (_computer.Hardware[0].SubHardware.Length == 0)
+            return [];
+
+        var superIo = _computer.Hardware[0].SubHardware[0];
+        if (superIo.Sensors.Length == 0)
+            return [];
+
+        superIo.Update();
+
+        return [.. superIo.Sensors
+            .Where(s => s.SensorType == SensorType.Control)
+            .Select(s => new FanCandidate(s.Name, s.Identifier))
+        ];
+    }
+
+    public Identifier? GetTachFromControl(Identifier controlId)
+    {
+        if (_computer.Hardware.Count == 0)
+            return null;
+        if (_computer.Hardware[0].SubHardware.Length == 0)
+            return null;
+
+        var superIo = _computer.Hardware[0].SubHardware[0];
+        if (superIo.Sensors.Length == 0)
+            return null;
+
+        superIo.Update();
+
+        var searchString = controlId.ToString().Replace(@"control", @"fan");
+        return _computer.Hardware[0].SubHardware[0].Sensors
+            .Where(s => s.SensorType == SensorType.Fan)
+            .FirstOrDefault(s => s.Identifier.ToString().Equals(searchString, StringComparison.OrdinalIgnoreCase))
+            ?.Identifier;
     }
 
     public string GetFanName() => _control?.Sensor.Name ?? string.Empty;

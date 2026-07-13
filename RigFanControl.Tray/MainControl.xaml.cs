@@ -21,18 +21,20 @@ public partial class MainControl : UserControl
         this.DataContext = ViewModel;
     }
 
-    private void SettingsClicked(object sender, System.Windows.RoutedEventArgs e)
-    {
+    private void SettingsClicked(object sender, System.Windows.RoutedEventArgs e) =>
         SettingsRequested?.Invoke(this, EventArgs.Empty);
-    }
 
-    private void PreviewTextInputHandler(object sender, TextCompositionEventArgs e)
-    {
+    private void PreviewTextInputHandler(object sender, TextCompositionEventArgs e) =>
         e.Handled = !IsTextAllowed(e.Text);
-    }
 
-    private static bool IsTextAllowed(string text)
+    private static bool IsTextAllowed(string text) => 
+        !NumberRegex().IsMatch(text);
+
+    private void GridMouseDown(object sender, MouseButtonEventArgs e) => 
+        Keyboard.ClearFocus();
+
+    private void SpeedTextBoxKeyDown(object sender, KeyEventArgs e)
     {
-        return !NumberRegex().IsMatch(text);
+        if (e.Key == Key.Enter) Keyboard.ClearFocus();
     }
 }

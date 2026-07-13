@@ -13,11 +13,11 @@ internal class Program
 
     private static void Test()
     {
-        List<FanCandidate> candidates = HardwareDiscovery.ListCandidates();
+        using FanController controller = new();
+        List<FanCandidate> candidates = controller.ListCandidates();
         foreach (var candidate in candidates)
             Console.WriteLine($"{candidate.Name} : {candidate.Id}");
         
-        using FanController controller = new();
         var fanCandidate = candidates.First(c => c.Id.ToString().Equals("/lpc/nct6687d/0/control/4", StringComparison.OrdinalIgnoreCase));
 
         controller.SetFromCandidate(fanCandidate);
