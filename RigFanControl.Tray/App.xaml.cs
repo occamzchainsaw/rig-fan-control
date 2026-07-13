@@ -24,8 +24,10 @@ public partial class App : Application
         string configPath = Path.Combine(appDataDir, "config.json");
 
         var store = new JsonConfigStore(configPath);
+        if (!Directory.Exists(appDataDir))
+            Directory.CreateDirectory(appDataDir);
         if (!File.Exists(configPath))
-            store.SaveConfig(new FanControllerConfig());
+            store.Save(new FanControllerConfig());
 
         var configuration = new ConfigurationBuilder()
             .AddJsonFile(configPath, optional: false, reloadOnChange: true)
@@ -39,6 +41,10 @@ public partial class App : Application
 
         services.AddSingleton<IConfigStore>(_ => new JsonConfigStore(configPath));
         services.AddSingleton<FanController>();
+        services.AddSingleton<SettingsViewModel>();
+        services.AddSingleton<SettingsControl>();
+        services.AddSingleton<MainViewModel>();
+        services.AddSingleton<MainControl>();
         services.AddSingleton<FlyoutWindow>();
 
         _provider = services.BuildServiceProvider();

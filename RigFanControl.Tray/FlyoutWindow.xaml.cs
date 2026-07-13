@@ -1,21 +1,32 @@
 ﻿using RigFanControl.Core;
-using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Input;
+using System.Windows.Controls;
 
 namespace RigFanControl.Tray;
 
 public partial class FlyoutWindow : Window
 {
-    [GeneratedRegex("[^0-9.-]+")]
-    private static partial Regex NumberRegex();
-    private readonly FanController _controller;
-    private readonly DebounceDispatcher _debounceTimer = new();
+    private readonly MainControl _mainControl;
+    private readonly SettingsControl _settingsControl;
 
-    public FlyoutWindow(FanController controller)
+    public FlyoutWindow(
+        FanController controller,
+        MainControl mainControl,
+        SettingsControl settingsControl)
     {
-        _controller = controller;
         InitializeComponent();
+        this.SizeChanged += SetPosition;
+        
+        _settingsControl = settingsControl;
+        _mainControl = mainControl;
+
+        _mainControl.SettingsRequested += (s, e) => SwitchTo(_settingsControl);
+        _settingsControl.HideRequested += (s, e) => SwitchTo(_mainControl);
+
+        MainContainer.Children.Add(_mainControl);
+        MainContainer.Children.Add(_settingsControl);
+
+        SwitchTo(_mainControl);
     }
 
     protected override void OnDeactivated(EventArgs e)
@@ -26,25 +37,25 @@ public partial class FlyoutWindow : Window
 
     public void ShowNearTray()
     {
-        var area = SystemParameters.WorkArea;
-        Left = area.Right - Width - 12;
-        Top = area.Bottom - Height - 12;
         Show();
         Activate();
     }
 
-    private void PreviewTextInputHandler(object sender, TextCompositionEventArgs e)
+    private void SetPosition(object sender, SizeChangedEventArgs e)
     {
-        e.Handled = !IsTextAllowed(e.Text);
+        var area = SystemParameters.WorkArea;
+        Left = area.Right - ActualWidth - 12;
+        Top = area.Bottom - ActualHeight - 12;
     }
 
-    private void SetValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    private void SwitchTo(UserControl activeControl)
     {
-        _debounceTimer.Debounce(500, () => { _controller.SetFanSpeed((float)e.NewValue); });
-    }
+        _mainControl.Visibility = Visibility.Collapsed;
+        _settingsControl.Visibility = Visibility.Collapsed;
 
-    private static bool IsTextAllowed(string text)
-    {
-        return !NumberRegex().IsMatch(text);
+        if (_mainControl.DataContext is MainViewModel vm)
+            vm.IsActive = activeControl == _mainControl;
+
+        activeControl.Visibility = Visibility.Visible;
     }
 }

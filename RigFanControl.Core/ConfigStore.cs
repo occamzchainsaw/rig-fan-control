@@ -5,7 +5,7 @@ namespace RigFanControl.Core;
 
 public interface IConfigStore
 {
-    public void SaveConfig(FanControllerConfig config);
+    public void Save(FanControllerConfig config);
 }
 
 public sealed class JsonConfigStore(string _path) : IConfigStore
@@ -16,7 +16,7 @@ public sealed class JsonConfigStore(string _path) : IConfigStore
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     };
 
-    public void SaveConfig(FanControllerConfig config)
+    public void Save(FanControllerConfig config)
     {
         var serializedData = JsonSerializer.Serialize(config, _serializerOptions);
         File.WriteAllText(_path, serializedData);

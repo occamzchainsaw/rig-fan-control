@@ -30,7 +30,7 @@ public class FanController : IDisposable
         GC.SuppressFinalize(this);
     }
 
-    private void SetFromConfig(FanControllerConfig config)
+    public void SetFromConfig(FanControllerConfig config)
     {
         if (_computer.Hardware.Count == 0)
             return;
@@ -90,6 +90,8 @@ public class FanController : IDisposable
 
         _control.SetSoftware(value);
     }
+
+    public string GetFanName() => _control?.Sensor.Name ?? string.Empty;
 
     public void UpdateTachReadout() => _tach?.Hardware.Update();
 

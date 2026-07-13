@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RigFanControl.Tray"
         mc:Ignorable="d"
-        d:Width="280" d:Height="160"
-        Width="280" Height="160"
+        d:Width="280" d:Height="360"
+        Width="280"
+        SizeToContent="Height"
         WindowStyle="None"
         ResizeMode="NoResize"
         ShowInTaskbar="False"
@@ -16,40 +17,5 @@
         <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml" />
     </Window.Resources>
 
-    <Grid Margin="16">
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0"
-              VerticalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0"
-                       Text="Fan speed"/>
-            <TextBlock Grid.Column="1"
-                       HorizontalAlignment="Right"
-                       Text="9999 RMP"/>
-        </Grid>
-        <Grid Grid.Row="1"
-              VerticalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <Slider Grid.Column="0"
-                    Minimum="0" Maximum="100"
-                    HorizontalAlignment="Stretch"
-                    Margin="0,0,12,0"
-                    TickFrequency="5"
-                    IsSnapToTickEnabled="True"
-                    ValueChanged="SetValueChanged"/>
-            <TextBox Grid.Column="1"
-                     HorizontalAlignment="Right"
-                     Width="32"
-                     PreviewTextInput="PreviewTextInputHandler"/>
-        </Grid>
-    </Grid>
+    <Grid x:Name="MainContainer" Margin="16"></Grid>
 </Window>
