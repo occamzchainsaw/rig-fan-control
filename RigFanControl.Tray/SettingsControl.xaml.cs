@@ -22,7 +22,7 @@ public partial class SettingsControl : UserControl
     protected override void OnInitialized(EventArgs e)
     {
         base.OnInitialized(e);
-        ViewModel.LoadCandidates();
+        ViewModel.Initialize();
     }
 
     private void CancelClicked(object sender, System.Windows.RoutedEventArgs e)

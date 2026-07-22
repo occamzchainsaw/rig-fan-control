@@ -21,6 +21,12 @@ public partial class MainControl : UserControl
         this.DataContext = ViewModel;
     }
 
+    protected override void OnInitialized(EventArgs e)
+    {
+        base.OnInitialized(e);
+        ViewModel.Initialize();
+    }
+
     private void SettingsClicked(object sender, System.Windows.RoutedEventArgs e) =>
         SettingsRequested?.Invoke(this, EventArgs.Empty);
 

@@ -12,7 +12,7 @@
         <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml" />
     </UserControl.Resources>
 
-    <Grid RowDefinitions="Auto,*,Auto,Auto">
+    <Grid RowDefinitions="Auto,*,Auto,Auto,Auto">
         <TextBlock Grid.Row="0"
                    Margin="0,0,0,12"
                    Style="{StaticResource SubtitleTextBlockStyle}"
@@ -44,7 +44,11 @@
                   Margin="0,0,0,12"
                   Content="Start application with Windows"
                   IsChecked="{Binding StartWithWindows, UpdateSourceTrigger=PropertyChanged}"/>
-        <StackPanel Grid.Row="3"
+        <CheckBox Grid.Row="3"
+                  Margin="0,0,0,12"
+                  Content="Start fan on application start"
+                  IsChecked="{Binding StartFanOnStart, UpdateSourceTrigger=PropertyChanged}"/>
+        <StackPanel Grid.Row="4"
                     Orientation="Horizontal"
                     HorizontalAlignment="Right">
             <Button Margin="0,0,8,0"

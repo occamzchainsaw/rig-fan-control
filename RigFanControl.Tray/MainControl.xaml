@@ -12,6 +12,21 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml"/>
+                <ResourceDictionary>
+                    <Style x:Key="FanSliderStyle" TargetType="Slider" BasedOn="{StaticResource {x:Type Slider}}">
+                        <Style.Resources>
+                            <SolidColorBrush x:Key="SliderThumbBackground"            Color="#4FC3F7"/>
+                            <SolidColorBrush x:Key="SliderThumbBackgroundPointerOver" Color="#81D4FA"/>
+                            <SolidColorBrush x:Key="SliderTrackFill"                  Color="#555555"/>
+                            <SolidColorBrush x:Key="SliderTrackFillPointerOver"       Color="#666666"/>
+                        </Style.Resources>
+                        <Style.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.4"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BoolToVis"/>
         </ResourceDictionary>
@@ -58,24 +73,36 @@
                     Margin="2,0,12,0"
                     TickFrequency="5"
                     IsSnapToTickEnabled="True"
+                    TickPlacement="Both"
+                    Style="{StaticResource FanSliderStyle}"
+                    IsEnabled="{Binding FanOn, UpdateSourceTrigger=PropertyChanged}"
                     Value="{Binding SpeedSetting, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBox Grid.Column="1"
-                     HorizontalAlignment="Right"
-                     VerticalAlignment="Center"
-                     Width="80"
-                     PreviewTextInput="PreviewTextInputHandler"
-                     KeyDown="SpeedTextBoxKeyDown"
-                     Text="{Binding SpeedSetting, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Grid.Column="2"
+            <TextBlock Grid.Column="1"
                        Margin="6,0,0,0"
                        VerticalAlignment="Center"
-                       Text="%"/>
+                       IsEnabled="{Binding FanOn, UpdateSourceTrigger=PropertyChanged}"
+                       Text="{Binding SpeedSetting, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0} %', FallbackValue='100%'}"/>
+            <ToggleButton Grid.Column="2"
+                          Margin="12,0,0,0"
+                          VerticalAlignment="Center"
+                          IsChecked="{Binding FanOn, UpdateSourceTrigger=PropertyChanged}">
+                <ToggleButton.Style>
+                    <Style TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
+                        <Setter Property="Content" Value="Fan Off"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Content" Value="Fan On"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ToggleButton.Style>
+            </ToggleButton>
             <Border Grid.Column="0" Grid.ColumnSpan="3"
                     Margin="0"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     Background="{DynamicResource SolidBackgroundFillColorSecondaryBrush}"
-                    Visibility="{Binding IncompleteConfig, Converter={StaticResource BoolToVis}}">
+                    Visibility="{Binding IncompleteConfig, Converter={StaticResource BoolToVis}, FallbackValue=Collapsed}">
                 <StackPanel Orientation="Vertical"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center">
