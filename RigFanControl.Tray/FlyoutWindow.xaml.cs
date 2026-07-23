@@ -1,6 +1,8 @@
 ﻿using RigFanControl.Core;
 using System.Windows;
 using System.Windows.Controls;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
 
 namespace RigFanControl.Tray;
 
@@ -16,7 +18,7 @@ public partial class FlyoutWindow : Window
     {
         InitializeComponent();
         this.SizeChanged += SetPosition;
-        
+
         _settingsControl = settingsControl;
         _mainControl = mainControl;
 
@@ -27,6 +29,18 @@ public partial class FlyoutWindow : Window
         MainContainer.Children.Add(_settingsControl);
 
         SwitchTo(_mainControl);
+    }
+
+    [DllImport("dwmapi.dll")]
+    private static extern int DwmSetWindowAttribute(
+        IntPtr hwnd, int attribute, ref uint pvAttribute, int cbAttribute);
+
+    protected override void OnSourceInitialized(EventArgs e)
+    {
+        base.OnSourceInitialized(e);
+        var hwnd = new WindowInteropHelper(this).Handle;
+        uint pref = DWMWCP_ROUND;
+        DwmSetWindowAttribute(hwnd, DWMWA_WINDOW_CORNER_PREFERENCE, ref pref, sizeof(uint));
     }
 
     protected override void OnDeactivated(EventArgs e)
