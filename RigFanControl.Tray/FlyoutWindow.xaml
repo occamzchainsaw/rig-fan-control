@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         d:Width="280" d:Height="360"
         SizeToContent="WidthAndHeight"
+        Background="{DynamicResource WindowBackground}"
         WindowStyle="None"
         ResizeMode="NoResize"
         ShowInTaskbar="False"

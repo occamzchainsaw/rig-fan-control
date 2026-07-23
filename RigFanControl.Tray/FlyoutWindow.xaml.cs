@@ -1,7 +1,7 @@
 ﻿using RigFanControl.Core;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Runtime.InteropServices;
 using System.Windows.Interop;
 
 namespace RigFanControl.Tray;
@@ -10,6 +10,11 @@ public partial class FlyoutWindow : Window
 {
     private readonly MainControl _mainControl;
     private readonly SettingsControl _settingsControl;
+
+    private const int DWMWA_WINDOW_CORNER_PREFERENCE = 33;
+    private const uint DWMWCP_ROUND = 2;
+    private const int DWMWA_SYSTEMBACKDROP_TYPE = 38;
+    private const uint DWMSBT_NONE = 1;
 
     public FlyoutWindow(
         FanController controller,
@@ -39,8 +44,12 @@ public partial class FlyoutWindow : Window
     {
         base.OnSourceInitialized(e);
         var hwnd = new WindowInteropHelper(this).Handle;
+
         uint pref = DWMWCP_ROUND;
         DwmSetWindowAttribute(hwnd, DWMWA_WINDOW_CORNER_PREFERENCE, ref pref, sizeof(uint));
+
+        uint backdrop = DWMSBT_NONE;
+        DwmSetWindowAttribute(hwnd, DWMWA_SYSTEMBACKDROP_TYPE, ref backdrop, sizeof(uint));
     }
 
     protected override void OnDeactivated(EventArgs e)
